@@ -1,0 +1,74 @@
+
+// 全局样式
+.toolbar-buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  padding: 0 8px;
+  & > :not(:first-child) {
+    margin-left: 8px;
+  }
+}
+
+// 表格搜索部分样式
+.k-table-content{
+  position: relative;
+  height: calc(100% - 16px);
+  width: calc(100% - 16px);
+  padding: 8px;
+  margin: 8px;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  .ant-spin-container .vxe-grid .vxe-grid--toolbar-wrapper .vxe-toolbar {
+    background-color: #fff!important;
+  }
+  // 搜索栏间隔
+  .ant-form-inline .ant-form-item{
+    margin-bottom: 8px;
+  }
+  &-operation {
+    .anticon {
+      font-size: 20px;
+    }
+  }
+}
+
+.k-menu {
+  border-right: none;
+}
+
+.k-page-layout{
+  background-color: #eee;
+}
+
+// 公共CSS
+.flex-column{
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-column-centet{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-row-centet{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-modal-body .ant-select {
+  width: 100%;
+  color: #999999;
+}

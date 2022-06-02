@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" href="/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vite App</title>
+    <script src="./router.config.js"></script>
+    <script src="./public/config.js"></script>
+    <style>
+        /*去除高德logo*/
+        .amap-logo {
+            display: none !important;
+            opacity: 0 !important;
+        }
+        .amap-sug-result {
+            z-index: 9999!important;
+            visibility: visible!important;
+            display: block!important;
+            margin-top: -10px;
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
