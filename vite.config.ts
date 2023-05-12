@@ -6,6 +6,10 @@ import { AntdResolve, createStyleImportPlugin, VxeTableResolve } from 'vite-plug
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    base: '/chargingAdmin/web/', //
+  //   assetsDir: './assert', // 静态资源路径
+  },
   server: {
     port: 8080,
     host:'0.0.0.0',

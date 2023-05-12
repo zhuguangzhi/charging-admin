@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
 import {ApiBase, errorCheck, AdminApi, RoleApi} from "@/common/api";
-import {Authority} from "../../../../public/AuthorityConfig";
+import {Authority} from "@/common/AuthorityConfig";
 import {message} from "ant-design-vue";
 
 const emit = defineEmits(["finish","cancel"]);

@@ -59,7 +59,7 @@ tableViewVo.vxeGridProps.columns = [
     //     return [(format.amendSource.find(item=>item.key==row.amendSource) as formatType).label]
     //   }
     // },
-    formatter:({cellValue})=>(format.amendSource.find(item=>item.key===cellValue) as formatType).label
+    formatter:({cellValue})=>(format.amendSource.find(item=>item.key===cellValue) as formatType)?.label
 
   },
   {field: "amendId", title: "退款来源编号", minWidth: "240", showHeaderOverflow: true},

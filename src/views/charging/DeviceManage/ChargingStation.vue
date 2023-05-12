@@ -7,7 +7,7 @@ import {FormEvent} from '../components/form'
 import {ApiBase, errorCheck, ChargingApi, AdminApi} from "@/common/api";
 import SetCharging from './components/SetCharging.vue'
 import {message} from "ant-design-vue";
-import {BrandList} from "../../../../public/BrandConfig";
+import {BrandList} from "@/common/BrandConfig";
 
 type chargingDataType = {
   type:string,

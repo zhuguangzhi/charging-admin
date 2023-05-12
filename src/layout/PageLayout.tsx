@@ -18,7 +18,7 @@ interface routerArrayType {
 export default defineComponent({
   components: {IMenu,MenuFoldOutlined,MenuUnfoldOutlined,PoweroffOutlined},
   setup(props: InputProps) {
-    
+
     const accountStore = account()
     const appStore:any = app()
     const router:any = useRouter()
@@ -128,7 +128,7 @@ export default defineComponent({
         }
       }
     }
-    
+
     // layout-header
     const header = () => (
       <a-layout-header class="k-page-layout-header">
@@ -136,8 +136,8 @@ export default defineComponent({
           {
             logo('header')
           }
-          <menu-fold-outlined onClick={()=>{collapsed.value=true}} style={{display:collapsed.value?'none':'inline-block'}} class="k-page-layout-header-icon" />
-          <menu-unfold-outlined onClick={()=>{collapsed.value=false}} style={{display:collapsed.value?'inline-block':'none'}} class="k-page-layout-header-icon"/>
+          <menu-fold-outlined v-show={!collapsed.value} onClick={()=>{collapsed.value=true}}  class="k-page-layout-header-icon" />
+          <menu-unfold-outlined v-show={collapsed.value} onClick={()=>{collapsed.value=false}} class="k-page-layout-header-icon"/>
 
           <div class="k-page-layout-header-sign">
             {getHeadTitle(selectKeys)?.desc || ''}
@@ -145,7 +145,7 @@ export default defineComponent({
         </div>
 
         <div class="k-page-layout-header-right" >
-          <span style={{display:'inline-block;',marginLeft: '8px',fontWeight:"bolder",fontSize:"16px"}}>{userName}</span>
+          <span style={{marginLeft: '8px',fontWeight:"bolder",fontSize:"16px"}}>{userName}</span>
           <a-tooltip placement="bottomRight" title={'退出登录'}>
           <poweroff-outlined onClick={loginOut} style={{cursor: 'pointer'}} class="k-page-layout-header-icon"/>
         </a-tooltip>
@@ -229,7 +229,7 @@ export default defineComponent({
               }
             }
           }
-          
+
         </a-layout>
       </div>
     )

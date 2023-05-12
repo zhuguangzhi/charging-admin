@@ -3,12 +3,13 @@
       :title="'详情'"
       :visible="true"
       :maskClosable="true"
+      width="1000px"
       okText="了解了"
       @cancel="emit('finish')"
       @ok = "emit('finish')"
   >
-    <div style="max-height: 45vh;overflow-y: scroll">
-      <a-descriptions :column='1' bordered>
+    <div style="max-height: 45vh;overflow-y: auto">
+      <a-descriptions :column='2' bordered>
         <a-descriptions-item v-for="(item,index) in detailList.data" :key="index"
                              :label="item.label">{{item.value}}</a-descriptions-item>
       </a-descriptions>

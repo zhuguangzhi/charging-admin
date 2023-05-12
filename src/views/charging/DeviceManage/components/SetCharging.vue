@@ -78,7 +78,7 @@ import {FormEvent} from "@/views/charging/components/form";
 import {message} from "ant-design-vue";
 import ChargingGun from "./ChargingGunModel.vue"
 import ChargingPile from "./ChargingPileModel.vue"
-import {BrandList} from '../../../../../public/BrandConfig'
+import {BrandList} from '@/common/BrandConfig'
 import ChargingDetails from "./ChargingDetails.vue";
 
 

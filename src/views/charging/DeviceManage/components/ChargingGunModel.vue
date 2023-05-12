@@ -112,7 +112,7 @@ import {FormEvent} from '../../components/form'
 import RulesList from "@/common/rules";
 import {ChargingApi} from "@/common/api";
 import {message} from "ant-design-vue";
-import {BrandList} from "../../../../../public/BrandConfig"
+import {BrandList} from "@/common/BrandConfig"
 import format from "@/common/format";
 
 const emit = defineEmits(["finish"]);

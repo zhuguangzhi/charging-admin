@@ -6,7 +6,7 @@ import ChargingGun from  './components/ChargingGunModel.vue'
 import {FormEvent} from '../components/form'
 import {ApiBase, errorCheck, ChargingApi, BerthApi} from "@/common/api";
 import {message} from "ant-design-vue";
-import {BrandList} from "../../../../public/BrandConfig";
+import {BrandList} from '@/common/BrandConfig';
 import ChargingDetails from './components/ChargingDetails.vue'
 import format from "@/common/format";
 // import BindBerth from '../components/MoreCheck.vue'
@@ -178,16 +178,16 @@ const onSeeDetails = (data:any)=>{
     },
     {
       'label':"急停按钮状态",
-      'value':data.rechargeState.energyConsumed===0?'正常':'已触发'
+      'value':data.rechargeState.energyConsumed===1?'已触发':'正常'
     },
 
     {
       'label':"过载标志位",
-      'value':data.rechargeState.flagOverLoad===0?'正常':'过载',
+      'value':data.rechargeState.flagOverLoad===1?'过载':'正常',
     },
     {
       'label':"过温标志位",
-      'value':data.rechargeState.flagOerTemperature===0?'正常':'过温',
+      'value':data.rechargeState.flagOerTemperature===1?'过温':'正常',
     },
     {
       'label':"充电枪状态",

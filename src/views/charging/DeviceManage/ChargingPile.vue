@@ -7,7 +7,7 @@ import {FormEvent} from '../components/form'
 import {ApiBase, errorCheck, ChargingApi, AdminApi} from "@/common/api";
 import SetCharging from './components/SetCharging.vue'
 import BindRule from '../components/MoreCheck.vue'
-import {BrandList} from "../../../../public/BrandConfig";
+import {BrandList} from "@/common/BrandConfig";
 import {message} from "ant-design-vue";
 import ChargingDetails from './components/ChargingDetails.vue'
 import format from "@/common/format";

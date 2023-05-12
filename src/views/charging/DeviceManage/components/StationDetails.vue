@@ -1,4 +1,3 @@
-
 <template>
   <div v-if="props.pileList.length>0">
     <div class="station-detail-box" id="square" ref="squareRef">
