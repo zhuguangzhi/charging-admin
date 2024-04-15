@@ -202,7 +202,7 @@ export const ApiBase = async (fun: Promise<any>, {showLoading = false, loadingTe
 
 //错误校验
 export const errorCheck = (result: any, error: any) => {
-    if (!result || result.code !== 0) {
+    if (!result || ![0,'0'].includes(result.code)) {
         const errorCode = [1610 , -1 , -2 , -3 , -4 , -5]
         if (errorCode.indexOf(result.code)!==-1){
             router.push('/login')

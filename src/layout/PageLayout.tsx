@@ -1,9 +1,10 @@
-import { h, ref, defineComponent, useSlots } from 'vue'
-import { useRouter } from 'vue-router'
+import {ref, defineComponent, useSlots, watch} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import { account, app } from '@/store'
 import IMenu from './menu'
 import './pageLayout.less'
 import { MenuFoldOutlined,MenuUnfoldOutlined,PoweroffOutlined } from '@ant-design/icons-vue'
+import {KIcon} from "@/common/commonFun/tools";
 
 
 interface InputProps {
@@ -12,7 +13,8 @@ interface InputProps {
 }
 interface routerArrayType {
   key:string,
-  desc:string
+  desc:string,
+  icon:string|null
 }
 
 export default defineComponent({
@@ -39,14 +41,16 @@ export default defineComponent({
     function MakeRouter(list:Array<object>,oldList:any = {}){
       list.forEach((data:any)=>{
         let key=data.router,
-            desc=data.name;
+            desc=data.name,
+            icon = data.icon?? oldList.icon;
         if (Object.keys(oldList).length !== 0){
           desc = oldList.name+'>'+data.name
         }
         if (data.children==null || data.children.length===0){
           routerMap.push({
             key,
-            desc
+            desc,
+            icon:icon
           })
         }else {
           MakeRouter(data.children,data)
@@ -57,8 +61,15 @@ export default defineComponent({
     console.log('路由导航::routerMap',routerMap)
     //获取导航头
     const getHeadTitle = (key:any)=>routerMap.find((item:routerArrayType)=>key.value[0] === '/'+item.key)
+    const getHeadIcon = (key:any)=>{
+      console.log('key.value[0]',key.value[0])
+      const res = routerMap.find((item:routerArrayType)=>key.value[0] ==='/'+item.key)
+      console.log('res',routerMap)
+      return res
+    }
     //点击侧边栏
     const menuOnSelect = (obj:any) => {
+      // console.log('routerMap',routerMap)
       selectKeys.value = obj.selectedKeys
       //小屏点击自动收起侧边栏
       if(isSmallScreen){
@@ -133,22 +144,32 @@ export default defineComponent({
     const header = () => (
       <a-layout-header class="k-page-layout-header">
         <div class="k-page-layout-header-left">
-          {
-            logo('header')
-          }
-          <menu-fold-outlined v-show={!collapsed.value} onClick={()=>{collapsed.value=true}}  class="k-page-layout-header-icon" />
-          <menu-unfold-outlined v-show={collapsed.value} onClick={()=>{collapsed.value=false}} class="k-page-layout-header-icon"/>
-
-          <div class="k-page-layout-header-sign">
-            {getHeadTitle(selectKeys)?.desc || ''}
+          {/*{*/}
+          {/*  logo('header')*/}
+          {/*}*/}
+          <div class={'left-icon'} onClick={()=>{collapsed.value=!collapsed.value}}>
+            <menu-fold-outlined v-show={!collapsed.value} className="k-page-layout-header-icon" />
+            <menu-unfold-outlined v-show={collapsed.value} className="k-page-layout-header-icon"/>
+          </div>
+          {/*<div class={'k-page-layout-header-left-title'}>{window.$$title}</div>*/}
+          <div class="k-page-layout-header-left-title">
+            {
+              KIcon(getHeadIcon(selectKeys)?.icon??'none')
+            }
+            <span style={{display:"inline-block",marginLeft:"8px",fontSize:"14px"}}>
+              {getHeadTitle(selectKeys)?.desc || ''}
+            </span>
           </div>
         </div>
 
         <div class="k-page-layout-header-right" >
-          <span style={{marginLeft: '8px',fontWeight:"bolder",fontSize:"16px"}}>{userName}</span>
-          <a-tooltip placement="bottomRight" title={'退出登录'}>
-          <poweroff-outlined onClick={loginOut} style={{cursor: 'pointer'}} class="k-page-layout-header-icon"/>
-        </a-tooltip>
+          {
+            KIcon('icon-wode-weixuanzhong')
+          }
+          {/*<span style={{marginLeft: '8px',fontWeight:"bolder",fontSize:"16px"}}>{userName}</span>*/}
+          {/*<a-tooltip placement="bottomRight" title={'退出登录'}>*/}
+          {/*  <poweroff-outlined onClick={loginOut} style={{cursor: 'pointer'}} class="k-page-layout-header-icon"/>*/}
+          {/*</a-tooltip>*/}
 
           {/*<span onClick={loginOut} style={{display:'inline-block;',marginLeft: '8px'}}>退出登录</span>*/}
           {/*<a-switch checked={themeState.value} onUpdate:checked={updateChecked} onChange={themeChange} />*/}
@@ -163,12 +184,12 @@ export default defineComponent({
     const siderOnCollapse = (_collapsed:boolean) => collapsed.value = _collapsed
     const sider = () => (
         <div class="minSideLayout">
-          <a-layout-sider style={{height:'100%'}} collapsed={collapsed.value} collapsedWidth={70} collapsible={true} onCollapse={siderOnCollapse} class="k-page-layout-sider maxScreenSide" width="240px">
-            {
-              logo('sider')
-            }
+          <a-layout-sider style={{height:'100%'}} collapsed={collapsed.value} collapsedWidth={70} collapsible={true} onCollapse={siderOnCollapse} class="k-page-layout-sider maxScreenSide" width="220px">
+            {/*{*/}
+            {/*  logo('sider')*/}
+            {/*}*/}
             <i-Menu
-                theme={appStore.theme ?? 'dark'}
+                theme={appStore.theme ?? 'light'}
                 mode="inline"
                 menuData={appStore.menuData}
                 collapsed={collapsed.value}
@@ -178,11 +199,11 @@ export default defineComponent({
             </i-Menu>
           </a-layout-sider>
           <a-layout-sider style={{height: '100%'}} collapsed={collapsed.value} collapsedWidth={0.001} collapsible={true} onCollapse={siderOnCollapse} class="k-page-layout-sider minScreenSide" width="240px">
-            {
-              logo('sider',true)
-            }
+            {/*{*/}
+            {/*  logo('sider',true)*/}
+            {/*}*/}
             <i-Menu
-                theme={appStore.theme ?? 'dark'}
+                theme={appStore.theme ?? 'light'}
                 mode="inline"
                 menuData={appStore.menuData}
                 collapsed={collapsed.value}

@@ -41,7 +41,7 @@ function errorState (response: any) {
 function successState (res: any) {
   console.log("响应数据：",res)
   // 统一判断后端返回的错误码(错误码与后台协商而定)
-  if (res.error === 0) {
+  if ([0,'0'].includes(res.error)) {
     return res
   }else{
   }
@@ -89,7 +89,6 @@ function apiAxios (method: string, url: string, params: any, header?: any) {
   // 注意**Promise**使用(Promise首字母大写)
   return new Promise((resolve, reject) => {
     axios(httpDefault).then((res) => {
-      console.log("res", res)
       successState(res)
       resolve(res)
     }).catch((response) => {

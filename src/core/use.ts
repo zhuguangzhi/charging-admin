@@ -39,7 +39,7 @@ import '@/components/drag-dialog/index'
 // Iconfont
 import { createFromIconfontCN } from '@ant-design/icons-vue';
 const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_781407_jek1f7jxa9a.js'
+  scriptUrl: '//at.alicdn.com/t/c/font_781407_7szoq13f3z2.js'
 })
 
 const init = (app: any) => {

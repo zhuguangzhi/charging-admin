@@ -5,8 +5,8 @@ import { ConfigProvider } from 'ant-design-vue'
 export default defineStore({
   id: "app",
   state: ()=> ({
-    theme: 'dark',
-    layout: 'sider', // header | sider
+    theme: 'light',
+    layout: 'header', // header | sider
     menuData: []
   }),
   actions: {

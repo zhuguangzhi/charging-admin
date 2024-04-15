@@ -16,7 +16,7 @@ export default defineConfig({
     // 反向代理
     proxy: {
       '/api': {
-        target: 'http://192.168.0.109:16000',
+        target: 'http://hjwgbcdzapi.proxy.shjdpark.qianlingkj.com',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }

@@ -9,18 +9,43 @@
 }
 .k-page-layout-header{
   width: 100%;
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: #F7F9F9;
+  //box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: row;
   z-index: 99;
   line-height: 64px;
-  &-icon {
-    margin-left: 16px;
-    font-size: 20px;
+  .left-icon {
+    color: rgb(51, 102, 204);
+    width: 54px;
+    text-align: center;
+    border-radius: 16px;
+    height: 36px;
+    line-height: 36px;
+    cursor: pointer;
+    font-size: 16px;
+    &:hover {
+      background-color: #E6EBF4;
+    }
+    &:active {
+        background-color: #C9D4E9;
+    }
   }
   &-left{
     flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    &-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 16px;
+      color: rgb(51, 102, 204);
+      font-size: 18px;
+      font-weight: bold;
+    }
   }
   &-right{
     display: flex;
@@ -39,7 +64,7 @@
 
 
 .k-page-layout-sider{
-  background-color: #001529;
+  background-color: #F7F9F9;
   .ant-menu-dark.ant-menu-inline, .ant-menu-dark.ant-menu-vertical, .ant-menu-dark.ant-menu-vertical-left, .ant-menu-dark.ant-menu-vertical-right{
     overflow-y: auto;
     height: calc(100% - 64px);
@@ -86,10 +111,55 @@
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+  background-color: #F7F9F9;
 }
 
 .maxScreenSide {
   display: block;
+  .ant-menu {
+    padding: 0 16px!important;
+    .ant-menu-item {
+      display: flex;
+      align-items: center;
+      //margin: 0!important;
+      padding: 0 16px 0 21.6px !important;
+      border-radius: 50px!important;
+      .anticon {
+        margin-right: 8px!important;
+      }
+      &:hover {
+        background-color: #E6E9EA!important;
+      }
+    }
+    .ant-menu-item-selected {
+      background-color: #C9D4E9;
+      color: #36c;
+      font-weight: bold;
+      &:hover {
+        background-color: #C9D4E9!important;
+      }
+    }
+    .ant-menu-submenu {
+      .anticon {
+        margin-right: 8px!important;
+      }
+      .ant-menu-submenu-title {
+        border-radius: 50px!important;
+      }
+      .ant-menu-submenu-title:active {
+        background-color: #E6E9EA!important;
+      }
+    }
+    a::before{
+      display: none!important;
+    }
+    .ant-menu-item-selected::after {
+      display: none!important;
+    }
+  }
+  .ant-menu.ant-menu-inline-collapsed > .ant-menu-item {
+    padding: 0 calc(50% - 16px / 2)!important;
+  }
 }
 .minScreenSide {
   display: none;

@@ -3,6 +3,7 @@ import { Menu, MenuTheme } from 'ant-design-vue'
 import { MenuMode } from 'ant-design-vue/lib/menu/src/interface'
 import { useRouter } from 'vue-router'
 import {account} from "@/store";
+import {KIcon} from "@/common/commonFun/tools";
 
 // 状态组件需要使用 defineComponent
 export default defineComponent({
@@ -86,9 +87,15 @@ export default defineComponent({
         {
           default: () => h(
             resolveComponent('router-link'),
-            { to: menu.path },
+            {
+              to: menu.path,
+              style:{
+                display: 'block',
+                width: '100%',
+              }
+            },
             () => [
-              renderIcon(menu ? menu.icon : 'none'),
+              KIcon(menu ? menu.icon : 'none'),
               h('span', [menu.name])
             ]
           )
@@ -111,7 +118,7 @@ export default defineComponent({
             'span',
             null,
             [
-              renderIcon(menu ? menu.icon : 'none'),
+              KIcon(menu ? menu.icon : 'none'),
               h('span', [menu.name])
             ]
           )
@@ -127,21 +134,18 @@ export default defineComponent({
           default: () => h('a',
             {
               href: menu.path,
-              target: '_blank'
+              target: '_blank',
+              style:{
+                width: '100%',
+              }
             },
             [
-              renderIcon(menu ? menu.icon : 'none'),
+              KIcon(menu ? menu.icon : 'none'),
               h('span', [menu.name])
             ]
           )
         }
       )
-    }
-
-    // 图标
-    const renderIcon =  (icon: any) => {
-      // return h('span', {class:"iconify", 'data-icon':"ant-design:eye-twotone", 'data-inline':"false"})
-      return !icon || icon == 'none' ? null : h(resolveComponent('icon-font'), {type: icon, style: { fontSize: '18px', marginRight: '16px' }})
     }
 
     const updateMenu = () => {
