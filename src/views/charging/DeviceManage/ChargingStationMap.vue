@@ -4,7 +4,7 @@
 import {onMounted, reactive, ref} from "vue";
 import AMapLoader from '@amap/amap-jsapi-loader';
 import {shallowRef} from '@vue/reactivity'
-import {ApiBase, ChargingApi, errorCheck} from "@/common/api";
+import {ChargingApi, errorCheck} from "@/common/api";
 import StationDetails from './components/StationDetails.vue'
 import {account} from "@/store";
 
@@ -19,8 +19,8 @@ let stationInfo: infoType[] = reactive<infoType[]>([])
 //获取充电站站点
 const GetStationList = async ()=>{
   let tenantCode = (account().getState.tenantInfo as any)?.tenantCode;
-  const {result,error} = await ApiBase(ChargingApi.GetAllStation({page:1,row:9999,tenantId:tenantCode}),{showLoading:true})
-  if (errorCheck(result,error)){
+  const result = await ChargingApi.GetAllStation({page:1,row:9999,tenantId:tenantCode}).base()
+  if (errorCheck(result)){
     for (let i = 0; i < result.data.length; i++) {
       let cionPath = "https://static.hcqzhtc.com/haroad5.png"
       if (result.data[i].idle > 99) {
@@ -93,8 +93,8 @@ const bindMark = (AMap:any) => {
 //点击了mark
 const clickMark = async (e:any) => {
   const stationId = e.target.getExtData() //拿到绑定的值
-  const {result,error} = await ApiBase(ChargingApi.GetAllDevice({page:1,row:9999,stationId:stationId.id}))
-  if (errorCheck(result,error)){
+  const result = await ChargingApi.GetAllDevice({page:1,row:9999,stationId:stationId.id}).base()
+  if (errorCheck(result)){
     pileList.value = result.data
   }
 
@@ -133,7 +133,11 @@ onMounted(async () => {
           id="tipInput"
           placeholder="输入地址"
           class="statrionSearch"
-      />
+      >
+        <template #prefix>
+          <IconFont type="icon-search1" />
+        </template>
+      </a-input>
       <div id="outPut"></div>
     </div>
   </div>
@@ -142,9 +146,12 @@ onMounted(async () => {
 
 <style lang='less'>
 #station-amap {
-  width: 100%;
-  height: 100%;
-
+  width: calc(100% - 16px);
+  height:  calc(100% - 16px);
+  margin-right: 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 5px #0003, 0 2px 2px #00000024, 0 3px 1px -2px #0000001f!important;
 }
 .station-details {
   position: absolute;
@@ -164,9 +171,31 @@ onMounted(async () => {
   #outPut {
     width: 250px;
     background: #FFFFFF;
+    margin-top: 8px;
+    border-radius: 16px;
+    //padding: 8px;
+    .auto-item {
+      margin: 0 8px;
+      &:first-child {
+        margin-top: 8px;
+      }
+      &:last-child {
+        margin-bottom: 8px;
+      }
+    }
+
   }
 }
 .statrionSearch {
   width: 250px;
+  border-radius: 16px;
+  //border: none;
+  outline: none;
+  box-shadow: none;
+  border: 1px solid rgba(0,0,0,0.12);
+  &:hover {
+    border: 1px solid rgba(0,0,0,0.12);
+  }
+
 }
 </style>

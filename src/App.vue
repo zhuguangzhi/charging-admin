@@ -2,15 +2,17 @@
 // import { h, ref, reactive, onMounted } from "vue"
 // import { VxeGridProps } from "vxe-table"
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import KPopup from "@/components/k_popup/KPopup.vue";
 
 </script>
 
 <template>
-  <!-- <div id="app"> -->
-  <a-config-provider :locale="zhCN">
-    <router-view/>
-  </a-config-provider>
-  <!-- </div> -->
+  <div id="app">
+    <a-config-provider :locale="zhCN">
+      <router-view/>
+    </a-config-provider>
+    <KPopup/>
+  </div>
 </template>
 
 <style lang="less" scoped>

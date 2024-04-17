@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import {reactive, ref} from "vue";
-import {ApiBase, errorCheck, AdminApi, RoleApi} from "@/common/api";
+import {errorCheck, RoleApi} from "@/common/api";
 import {Authority} from "@/common/AuthorityConfig";
 import {message} from "ant-design-vue";
 
@@ -83,9 +83,9 @@ const onConfirm = async  () => {
   //   return false
   // }
   confirmLoading.value = true
-  const {result,error} = await ApiBase(RoleApi.BindRolePermission({roleId:props.authorityData.data.id,permissionNames:checkedKeys.value}))
+  const result = await RoleApi.BindRolePermission({roleId:props.authorityData.data.id,permissionNames:checkedKeys.value}).base()
   // const {result,error} = await ApiBase(RoleApi.AddRolePermission([...test]))
-  if (errorCheck(result,error)){
+  if (errorCheck(result)){
     message.success('配置成功')
     emit('finish')
     emit('cancel')

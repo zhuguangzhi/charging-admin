@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {h, reactive, onMounted, resolveComponent} from "vue"
+import {h, reactive, onMounted} from "vue"
 import {TableViewVo} from "@/common/tableViewVo"
 import {VxeGridProps} from "vxe-table"
-import {ApiBase, errorCheck, WeChartMerchantApi} from "@/common/api";
+import {errorCheck, WeChartMerchantApi} from "@/common/api";
 import {message} from "ant-design-vue";
 
 const emit = defineEmits(["cancel","finish"]);
@@ -43,10 +43,10 @@ tableViewVo.total = props.fileInfo.data?.length
 tableViewVo.row = 9999
 
 const removeFile = async ()=>{
-  const {result,error} = await ApiBase(WeChartMerchantApi.RemoveMerchantFile({
+  const result = await WeChartMerchantApi.RemoveMerchantFile({
     id:props.fileInfo.id
-  }))
-  if (errorCheck(result,error)){
+  }).base()
+  if (errorCheck(result)){
     message.success('移除成功')
     emit('finish')
   }

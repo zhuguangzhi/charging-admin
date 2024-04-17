@@ -1,5 +1,6 @@
 // store.js
 import { defineStore } from "pinia";
+import {account} from "@/store";
 
 export default defineStore({
   id: "account",
@@ -13,6 +14,8 @@ export default defineStore({
     adminInfo:null,//管理员信息
     tenantInfo:null,//商户信息,
     isTenantBoss:false,//是否是总商户
+  //   当前使用的商户身份
+    currentUseTenant: "",
   }),
 
   actions: {
@@ -36,10 +39,14 @@ export default defineStore({
     },
     setTenantInfo(routesConfig: any) {
       this.$state.tenantInfo = routesConfig
+      this.$state.currentUseTenant = routesConfig?.tenantCode
     },
     setTenantBoss(routesConfig: any) {
       this.$state.isTenantBoss = routesConfig
     },
+    setCurrentUseTenant(tenantCode: string) {
+      this.$state.currentUseTenant = tenantCode
+    }
   },
 
   getters:{
@@ -54,6 +61,9 @@ export default defineStore({
     },
     getTenantBoos(state) {
       return state.isTenantBoss
+    },
+    getCurrentUseTenant(state) {
+      return state.currentUseTenant
     }
   },
   // 开启数据缓存

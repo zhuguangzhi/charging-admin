@@ -3,9 +3,9 @@ import { h, ref, reactive, onMounted, resolveComponent } from "vue"
 import { TableViewVo } from "@/common/tableViewVo"
 import { VxeGridProps } from "vxe-table"
 import {FormEvent} from '../components/form'
-import {ApiBase, errorCheck, Merchant, OrderApi} from "@/common/api";
+import {OrderApi} from "@/common/api";
 import OrderDetail from './components/OrderDetail.vue'
-import format from "@/common/format";
+import format, {getLabel} from "@/common/format";
 
 let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),))
 let formEvent:FormEvent = reactive<FormEvent>(new FormEvent());
@@ -46,7 +46,7 @@ tableViewVo.vxeGridProps.columns = [
     // slots:{
     //   default:({row})=>[(format.operateType.find(item=>item.key==row.operateType) as formatType).label]
     // },
-    formatter:({cellValue})=>(format.operateType.find(item=>item.key==cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('operateType',cellValue)
 
   },
   { field: "createdTime", title: "创建时间",minWidth:"160", showOverflow: true },
@@ -86,7 +86,7 @@ tableViewVo.vxeGridProps.columns = [
 tableViewVo.getDataFun = async (param) => {
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = OrderApi.GetAllFinishOrder
-  return await ApiBase(OrderApi.GetAllFinishOrder({...param}))
+  return await OrderApi.GetAllFinishOrder({...param}).base()
 
 }
 const timeData = reactive([])

@@ -36,7 +36,7 @@ import {ApiBase, errorCheck} from "@/common/api";
 import * as XLSX from "xlsx"
 
 let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),))
-
+tableViewVo.usePagination = false
 const emit = defineEmits(["finish","export"]);
 const props = defineProps({
   // 单次请求重试次数

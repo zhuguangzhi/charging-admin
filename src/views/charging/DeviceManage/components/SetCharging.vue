@@ -14,7 +14,7 @@
 }
 .setRoleModel {
   height: 40vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   .ant-checkbox-group-item {
     padding-bottom: 8px;
   }
@@ -73,7 +73,7 @@
 import { TableViewVo } from "@/common/tableViewVo"
 import {h, onMounted, reactive, ref, resolveComponent, watch} from "vue";
 import {VxeGridProps} from "vxe-table";
-import {ApiBase, ChargingApi,errorCheck} from "@/common/api";
+import {ChargingApi} from "@/common/api";
 import {FormEvent} from "@/views/charging/components/form";
 import {message} from "ant-design-vue";
 import ChargingGun from "./ChargingGunModel.vue"

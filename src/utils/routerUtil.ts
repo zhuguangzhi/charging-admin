@@ -97,6 +97,7 @@ function parseRoutes(routesConfig: any, routerMap: any) {
                 component: router.component,
                 redirect: routeCfg.redirect || router.redirect,
                 meta: {
+                    title:routeCfg.name || router.name,
                     authority: routeCfg.authority || router.authority || '*', // 权限信息
                     icon: routeCfg.icon || router.icon, // 图标信息
                     page: routeCfg.page || router.page // 路由path路径

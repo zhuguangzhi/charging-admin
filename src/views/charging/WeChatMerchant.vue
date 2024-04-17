@@ -3,7 +3,7 @@ import {h, reactive, onMounted, resolveComponent} from "vue"
 import {TableViewVo} from "@/common/tableViewVo"
 import {VxeGridProps} from "vxe-table"
 import {FormEvent} from './components/form'
-import {ApiBase, AdminApi, WeChartMerchantApi, Merchant,} from "@/common/api";
+import {WeChartMerchantApi} from "@/common/api";
 import WeChatModel from './components/WeChatModel.vue'
 import BindFile from './components/BindFile.vue'
 import SeeFile from './components/SeeFile.vue'
@@ -95,7 +95,7 @@ tableViewVo.vxeGridProps.columns = [
 tableViewVo.getDataFun = async (param: any) => {
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = WeChartMerchantApi.GetAllWeChartMerchant
-  return await ApiBase(WeChartMerchantApi.GetAllWeChartMerchant({...param}))
+  return await WeChartMerchantApi.GetAllWeChartMerchant({...param}).base()
 }
 
 onMounted(() => {

@@ -1,7 +1,9 @@
-import Http from './http'
+
 import {message} from 'ant-design-vue'
 import router from "@/router";
+import http from "@/common/request";
 
+export const Http = new http()
 
 const baseApi = () => (window as any).$$Url + '/api/v1'
 
@@ -201,16 +203,16 @@ export const ApiBase = async (fun: Promise<any>, {showLoading = false, loadingTe
 }
 
 //错误校验
-export const errorCheck = (result: any, error: any) => {
+export const errorCheck = (result: any, error?: any) => {
     if (!result || ![0,'0'].includes(result.code)) {
         const errorCode = [1610 , -1 , -2 , -3 , -4 , -5]
         if (errorCode.indexOf(result.code)!==-1){
             router.push('/login')
         }
-        message.error({
-            title: '请求异常',
-            content: result.msg
-        })
+        // message.error({
+        //     title: '请求异常',
+        //     content: result.msg
+        // })
         return false;
     }
     return true;

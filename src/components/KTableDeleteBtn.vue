@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { message } from 'ant-design-vue'
+import KPopupInstance from "@/components/k_popup/KPopupVo"
 import { QuestionCircleOutlined } from '@ant-design/icons-vue'
+import {ref} from "vue";
 
 const props = defineProps({
   toolTipText: {
@@ -8,6 +10,7 @@ const props = defineProps({
     default: "删除"
   },
   title: String,
+  msg:String,
   disabled: {
     type: Boolean,
     default: false
@@ -31,22 +34,23 @@ const confirm = () => {
 }
 
 const cancel = () => {
-  message.warning('取消' + props?.toolTipText ?? '')
+  KPopupInstance.open.value = false
   emit('cancel')
 }
 
+function openPopup() {
+  KPopupInstance.openCall({
+    title: '删除',
+    msg: props.title || props.msg || "确认删除吗?",
+    onOk: confirm,
+    onClose: cancel,
+  })
+}
 </script>
 
 <template>
-  <a-popconfirm
-    class="k-delete-btn"
-    :disabled="props.disabled"
-    :title="props?.title ?? '确认删除吗？'"
-    @confirm="confirm"
-    @cancel="cancel">
-    <template #icon><question-circle-outlined style="color: red" /></template>
-    <k-table-opt-btn :toolTipText="props?.toolTipText ?? ''">
-      <icon-font :type="iconType" style="color: #ed6f6f;"></icon-font>
+    <k-table-opt-btn :toolTipText="props?.toolTipText ?? '删除'" @click="openPopup" :use-tool="false">
+      <span style="color: #FF7875">{{props?.toolTipText ?? '删除'}}</span>
+<!--      <icon-font :type="iconType" style="color: #ed6f6f;font-size: 18px"></icon-font>-->
     </k-table-opt-btn>
-  </a-popconfirm> 
 </template>

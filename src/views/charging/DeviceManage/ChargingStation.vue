@@ -4,10 +4,9 @@ import { TableViewVo } from "@/common/tableViewVo"
 import { VxeGridProps } from "vxe-table"
 import ChargingStation from  './components/ChargingStationModal.vue'
 import {FormEvent} from '../components/form'
-import {ApiBase, errorCheck, ChargingApi, AdminApi} from "@/common/api";
+import {ChargingApi} from "@/common/api";
 import SetCharging from './components/SetCharging.vue'
 import {message} from "ant-design-vue";
-import {BrandList} from "@/common/BrandConfig";
 
 type chargingDataType = {
   type:string,
@@ -30,18 +29,7 @@ tableViewVo.vxeGridProps.columns = [
   {type: 'checkbox', width: '60'},
   { field: "id", title: "充电站编号",minWidth:'240', showHeaderOverflow: true },
   { field: "name", title: "充电站名称",minWidth:'240', showHeaderOverflow: true },
-  { field: "status", title: "状态", minWidth:'120',slots:{
-      default:({row})=>{
-        return [
-          h(resolveComponent('a-tag'),
-              {color: row.enabled==1?'green':'red' },
-              ()=>row.enabled===1?'已启用':'已禁用')
-        ];
-      }
-    },
-    formatter:({cellValue})=>cellValue===1?'已启用':'已禁用'
-
-  },
+  { field: "enabled", title: "状态", minWidth:'120',slots:{default:'enabled'}, formatter:({cellValue})=>cellValue===1?'启用':'禁用'},
   { field: "chargingPileSum", title: "绑定桩数量",minWidth:'120', showHeaderOverflow: true },
   { field: "province", title: "所属省",minWidth:'120', showOverflow: true },
   { field: "city", title: "所属市",minWidth:'120', showOverflow: true },
@@ -63,7 +51,7 @@ tableViewVo.vxeGridProps.columns = [
             h(resolveComponent('KTableAutoBtn'), {
               toolTipText:"桩配置",
               iconType:"icon-shezhi2",
-              iconColor:"#B291DA",
+              iconColor:"#E5614A",
               onClick: () => {
                 chargingData.showModal=true;
                 chargingData.name = row.name;
@@ -89,7 +77,7 @@ onMounted(() => {
 tableViewVo.getDataFun = async (param:any)=>{
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = ChargingApi.GetAllStation
-  return await ApiBase(ChargingApi.GetAllStation({...param}),{showLoading:true})
+  return await ChargingApi.GetAllStation({...param}).base()
 
 }
 //删除
@@ -112,14 +100,14 @@ const onDelete = async ()=>{
     <div class="k-table-content-form">
       <k-table-form :tableViewVo="tableViewVo">
         <a-form layout="inline" :model="tableViewVo.form">
-          <a-form-item label="充电站名">
+          <a-form-item label="">
             <a-input v-model:value="tableViewVo.form.name" placeholder="充电站名"></a-input>
           </a-form-item>
-          <a-form-item label="充电站编号">
+          <a-form-item label="">
             <a-input v-model:value="tableViewVo.form.id" placeholder="充电站编号"></a-input>
           </a-form-item>
-          <a-form-item label="充电站区域">
-            <a-input v-model:value="tableViewVo.form.district" placeholder="充电站区域"></a-input>
+          <a-form-item label="">
+            <a-input v-model:value="tableViewVo.form.district" placeholder="所属区"></a-input>
           </a-form-item>
         </a-form>
       </k-table-form>
@@ -134,6 +122,10 @@ const onDelete = async ()=>{
             </a-popconfirm>
           </a-button>
         </div>
+      </template>
+      <template #enabled="{row}">
+        <KSuccessTag v-if="row['enabled'] == 1" text="启用"/>
+        <KErrorTag v-else text="禁用"/>
       </template>
     </k-table>
     <charging-station v-if="formEvent.show" :formEvent="formEvent" @finish="tableViewVo.reFresh()"/>

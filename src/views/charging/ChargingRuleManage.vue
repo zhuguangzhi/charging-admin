@@ -4,10 +4,10 @@ import { TableViewVo } from "@/common/tableViewVo"
 import { VxeGridProps } from "vxe-table"
 import {FormEvent} from './components/form'
 import BillingRuleEdit from './components/BillingRuleEdit.vue'
-import {ApiBase, ChargingRuleApi, Merchant} from "@/common/api";
+import {ChargingRuleApi} from "@/common/api";
 import {message} from "ant-design-vue";
 import ChargingDetails from './DeviceManage/components/ChargingDetails.vue'
-import format from "@/common/format";
+import format, {getLabel} from "@/common/format";
 
 //详情
 const detailList:any = reactive({
@@ -30,7 +30,7 @@ tableViewVo.vxeGridProps.columns = [
     //     (format.billType.find(item=>item.key===row.billType) as formatType).label
     // ]
     // },
-    formatter:({cellValue})=>(format.billType.find(item=>item.key===cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('billType',cellValue)
   },
   { field: "memo", title: "备注", minWidth: '320' },
   { title: '操作', field: 'allowance', fixed: 'right', minWidth: '120', slots: { default: ({row}) => {
@@ -65,7 +65,7 @@ tableViewVo.vxeGridProps.columns = [
 tableViewVo.getDataFun = async (param:any)=>{
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = ChargingRuleApi.GetAllRule
-  return await ApiBase(ChargingRuleApi.GetAllRule({...param}),{showLoading:true})
+  return await ChargingRuleApi.GetAllRule({...param}).base()
 
 
 }

@@ -140,6 +140,23 @@ export default defineComponent({
       }
     }
 
+    const headerContent = ()=>{
+      return <div class='headerContent'>
+        <div class={'headerContent_item'}>
+          {
+            KIcon('icon-yonghu2')
+          }
+          <span>{userName}</span>
+        </div>
+        <div class={'headerContent_item'} onClick={loginOut}>
+          {
+            KIcon('icon-tuichu1')
+          }
+          <span>退出系统</span>
+        </div>
+      </div>
+    }
+
     // layout-header
     const header = () => (
       <a-layout-header class="k-page-layout-header">
@@ -163,9 +180,14 @@ export default defineComponent({
         </div>
 
         <div class="k-page-layout-header-right" >
-          {
-            KIcon('icon-wode-weixuanzhong')
-          }
+          <a-popover placement="bottomLeft" content={headerContent} trigger="click">
+            <div class={'k-page-layout-header-right-icon'}>
+              {
+                KIcon('icon-yonghu2')
+              }
+            </div>
+          </a-popover>
+
           {/*<span style={{marginLeft: '8px',fontWeight:"bolder",fontSize:"16px"}}>{userName}</span>*/}
           {/*<a-tooltip placement="bottomRight" title={'退出登录'}>*/}
           {/*  <poweroff-outlined onClick={loginOut} style={{cursor: 'pointer'}} class="k-page-layout-header-icon"/>*/}

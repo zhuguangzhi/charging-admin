@@ -1,6 +1,6 @@
 import {reactive, ref} from "vue";
 import {message} from "ant-design-vue";
-import {ApiBase, errorCheck} from "@/common/api";
+import {errorCheck} from "@/common/api";
 
 /**
  * 表格类型枚举，可以用来分类处理不同场景
@@ -60,13 +60,13 @@ export class FormEvent {
         this.confirmLoading = confirmLoading_
         let hide;
         if (loading_)  hide=message.loading(message_,0)
-        const {result,error} = await ApiBase(api_({...param_}))
+        const result = await api_({...param_}).base()
         if(hide) hide()
         this.loading = false
 
         this.confirmLoading = false
 
-        if (errorCheck(result,error)){
+        if (errorCheck(result)){
             return result;
         }
         return '';

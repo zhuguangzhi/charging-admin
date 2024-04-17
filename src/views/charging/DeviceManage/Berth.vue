@@ -4,12 +4,13 @@ import { TableViewVo } from "@/common/tableViewVo"
 import { VxeGridProps } from "vxe-table"
 import ChargingGun from  './components/ChargingGunModel.vue'
 import {FormEvent} from '../components/form'
-import {ApiBase, ChargingApi, BerthApi, OrderApi} from "@/common/api";
+import {BerthApi} from "@/common/api";
 import {message} from "ant-design-vue";
 import format from "@/common/format";
 import BerthModel from './components/BerthModel.vue'
 import BindDev from '../components/MoreCheck.vue'
 import UploadBerth from "./components/uploadBerth.vue";
+import {ShetYpe} from "@/common/fieldConfig";
 
 let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),))
 let formEvent:FormEvent = reactive<FormEvent>(new FormEvent());
@@ -52,7 +53,7 @@ tableViewVo.vxeGridProps.columns = [
   },
   { field: "type", title: "车位类型", minWidth:"240",showHeaderOverflow: true ,
     formatter:({cellValue})=>{
-      let res = format.ForMapArray(cellValue.split(','),format.ShetYpe)
+      let res = format.ForMapArray(cellValue.split(','),ShetYpe)
       return res.map(item=>item.label).join()
       // return res.map(item=>item.label).join()
     }
@@ -120,7 +121,7 @@ tableViewVo.vxeGridProps.columns = [
 tableViewVo.getDataFun = async (param:any)=>{
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = BerthApi.GetAllBerth
-  return await ApiBase(BerthApi.GetAllBerth({...param}))
+  return await BerthApi.GetAllBerth({...param}).base()
 }
 
 onMounted(() => {

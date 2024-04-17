@@ -4,13 +4,13 @@ import { TableViewVo } from "@/common/tableViewVo"
 import { VxeGridProps } from "vxe-table"
 import ChargingPile from  './components/ChargingPileModel.vue'
 import {FormEvent} from '../components/form'
-import {ApiBase, errorCheck, ChargingApi, AdminApi} from "@/common/api";
+import {errorCheck, ChargingApi} from "@/common/api";
 import SetCharging from './components/SetCharging.vue'
 import BindRule from '../components/MoreCheck.vue'
 import {BrandList} from "@/common/BrandConfig";
 import {message} from "ant-design-vue";
 import ChargingDetails from './components/ChargingDetails.vue'
-import format from "@/common/format";
+import {getLabel} from "@/common/format";
 
 
 let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),))
@@ -152,7 +152,7 @@ tableViewVo.vxeGridProps.columns = [
 tableViewVo.getDataFun = async (param:any)=>{
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = ChargingApi.GetAllDevice
-  return await ApiBase(ChargingApi.GetAllDevice({...param,type:"12,14"}))
+  return await ChargingApi.GetAllDevice({...param,type:"12,14"}).base()
 }
 const instance:any= getCurrentInstance()
 onMounted(() => {
@@ -215,7 +215,7 @@ const onSeeDetails=(data:any)=>{
           },
           {
             'label':"使用状态",
-            'value':format.gunUseStatus(item.status)?.label
+            'value':getLabel('gunStatus',item.status)
           },
         ]
       })
@@ -252,9 +252,9 @@ const UnBindRule = async ()=>{
     message.error('请选择充电桩')
     return false
   }
-  const {result,error} = await ApiBase(ChargingApi.UnBindRule({
+  const result = await ChargingApi.UnBindRule({
     ids:tableViewVo.checkList.map((item:any)=>item.id)
-  }))
+  }).base()
   if (errorCheck(result,error)){
     message.success('批量解绑收费规则成功')
     tableViewVo.reFresh()

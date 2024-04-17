@@ -3,6 +3,8 @@ import {reactive, ref, useSlots} from "vue"
 import { TableViewVo } from '@/common/tableViewVo'
 import KWExport from '@/components/KWExport.vue'
 import { VxeTableInstance, VxeButtonEvents } from 'vxe-table'
+import {ExportViewVo} from "@/components/k-export/exportViewVo";
+import KExport from "@/components/k-export/KExport.vue";
 const slots = useSlots()
 
 const props = defineProps({
@@ -22,6 +24,9 @@ const exportModel:any = reactive({
   // column:(props.tableViewVo.vxeGridProps.columns as any).map((item:any)=>item.title)
 })
 
+const exportViewVo = reactive<ExportViewVo>(new ExportViewVo(props.tableViewVo?.exportName))
+
+
 const  onExport = ()=> {
   exportModel.show = true
   exportModel.data = {
@@ -37,7 +42,7 @@ const  onExport = ()=> {
   // }
 }
 
-  const selectChangeEvent = ({$table}: any) => {
+const selectChangeEvent = ({$table}: any) => {
     (props.tableViewVo as any).checkList = $table.getCheckboxRecords()
   }
 
@@ -53,37 +58,56 @@ const onExportTable:VxeButtonEvents.Click = (row:any)=>{
 </script>
 
 <template>
-  <div class="k-table" :class="{'k-table-auto': props.tableViewVo.heightFull}">
-    <a-spin :spinning="props.tableViewVo.loading">
-      <vxe-grid ref="xTable" v-bind="props.tableViewVo.vxeGridProps" @checkbox-all="selectChangeEvent" @checkbox-change="selectChangeEvent" >
-        <template #toolbar_buttons>
-         <div style="display: flex;align-items: center">
-           <slot name="toolbar_buttons"></slot>
-           <a-button v-if="props.tableViewVo.useExport" @click="onExport">导出</a-button>
-         </div>
+  <div class="k-table" :class="{'k-table-auto': props.tableViewVo?.heightFull}">
+    <a-spin :spinning="props.tableViewVo?.loading">
+      <vxe-grid ref="xTable" v-bind="props.tableViewVo?.vxeGridProps" @checkbox-all="selectChangeEvent" @checkbox-change="selectChangeEvent" >
+        <!-- 透传插槽 -->
+        <template v-for="(item, key, index) in $slots" :key="index" v-slot:[key]="slotProps">
+          <!-- 默认toolbar_buttons -->
+          <div v-if="key == 'toolbar_buttons'" style="display: flex;align-content: center">
+            <slot name="toolbar_buttons" v-bind="slotProps"></slot>
+            <div style="margin-left: 8px" v-if="props.tableViewVo?.useExport">
+<!--              <a-button @click="onExport">导出</a-button>-->
+              <a-button @click="exportViewVo.show({
+                tableViewVo:props.tableViewVo,
+                tableRef:xTable
+              })">导出</a-button>
+            </div>
+          </div>
+          <slot v-else :name="key" v-bind="slotProps"></slot>
         </template>
+        <!-- 默认toolbar_buttons -->
+        <template v-if="!$slots.toolbar_buttons" #toolbar_buttons></template>
+<!--        <template #toolbar_buttons>-->
+<!--         <div style="display: flex;align-items: center">-->
+<!--           <slot name="toolbar_buttons"></slot>-->
+<!--           <a-button v-if="props.tableViewVo.useExport" @click="onExport">导出</a-button>-->
+<!--         </div>-->
+<!--        </template>-->
         <!-- <template #tools_buttons>
           <icon-font type="icon-bianji"></icon-font>
         </template> -->
         <template #empty>
           <a-empty />
         </template>
-        <template #pager>
+        <template #pager v-if="props.tableViewVo?.usePagination">
           <div class="k-table-page">
             <a-pagination
-              show-quick-jumper
-              :page-size="props.tableViewVo.row"
-              :total="props.tableViewVo.total"
-              @change="(page: number) => props.tableViewVo.onPageChange(page)"
+              :page-size="props.tableViewVo?.row"
+              size="small"
+              :total="props.tableViewVo?.total"
+              :show-total="total => `共 ${total} 条`"
+              @change="(page: number) => props.tableViewVo?.onPageChange(page)"
               :show-size-changer="true"
-              @showSizeChange="(current:number, pageSize:number) => props.tableViewVo.onPageSizeChange(pageSize, current)"
+              @showSizeChange="(current:number, pageSize:number) => props.tableViewVo?.onPageSizeChange(pageSize, current)"
               :page-size-options="['10', '20', '50', '100']"
             />
           </div>
         </template>
       </vxe-grid>
     </a-spin>
-    <k-w-export v-if="exportModel.show" @finish="exportModel.show=false" :exportModel = "exportModel" @export="onExportTable"/>
+    <KExport v-model:export-view="exportViewVo"/>
+<!--    <k-w-export v-if="exportModel.show" @finish="exportModel.show=false" :exportModel = "exportModel" @export="onExportTable"/>-->
   </div>
 </template>
 
@@ -120,5 +144,10 @@ const onExportTable:VxeButtonEvents.Click = (row:any)=>{
   display: flex;
   flex-direction: row;
   justify-content: end;
+}
+</style>
+<style>
+.vxe-table--border-line {
+  display: none;
 }
 </style>

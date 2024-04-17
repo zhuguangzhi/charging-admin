@@ -3,7 +3,7 @@ import { h, ref, reactive, onMounted, resolveComponent } from "vue"
 import { TableViewVo } from "@/common/tableViewVo"
 import { VxeGridProps } from "vxe-table"
 import {FormEvent} from './components/form'
-import {ApiBase, Merchant, PayPackage} from "@/common/api";
+import { PayPackage} from "@/common/api";
 import {message} from "ant-design-vue";
 import PayPackageModel from './components/PayPackageModel.vue'
 import format from "@/common/format";
@@ -77,7 +77,7 @@ tableViewVo.vxeGridProps.columns = [
 tableViewVo.getDataFun = async (param) => {
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = PayPackage.GetAllPackage
-  return await ApiBase(PayPackage.GetAllPackage({...param}))
+  return await PayPackage.GetAllPackage({...param}).base()
 
 }
 onMounted(() => {

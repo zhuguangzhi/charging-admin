@@ -42,9 +42,8 @@
 import { reactive, ref} from "vue";
 import { FormEvent } from './form'
 import RulesList from "@/common/rules";
-import {RoleApi, ApiBase, errorCheck} from "@/common/api";
+import {RoleApi} from "@/common/api";
 import {message} from "ant-design-vue";
-// import type { FormInstance } from 'ant-design-vue';
 
 const emit = defineEmits(["finish"]);
 const formRef:any = ref(null)
@@ -88,7 +87,7 @@ const onAddRole = async ()=>{
   formEvent.close()
 }
 const bindAuthority = async(id:number|string) => {
-  await ApiBase(RoleApi.BindRolePermission({roleId:id,permissionNames:['*']}))
+  await RoleApi.BindRolePermission({roleId:id,permissionNames:['*']}).base()
   message.success("创建成功")
   emit("finish")
 

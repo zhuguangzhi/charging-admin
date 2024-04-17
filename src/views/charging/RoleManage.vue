@@ -4,8 +4,7 @@ import { TableViewVo } from "@/common/tableViewVo"
 import { VxeGridProps } from "vxe-table"
 import Role from  './components/Role.vue'
 import {FormEvent} from './components/form'
-import {ApiBase, errorCheck, Merchant, RoleApi} from "@/common/api";
-import {account} from "@/store";
+import {RoleApi} from "@/common/api";
 import SetAuthority from './components/SetAuthority.vue'
 import {message} from "ant-design-vue";
 
@@ -30,33 +29,7 @@ tableViewVo.vxeGridProps.columns = [
   { field: "description", title: "角色描述",minWidth:'240', showHeaderOverflow: true },
 
   { field: "memo", title: "备注",minWidth:'240',  showOverflow: true },
-  { title: '操作', field: 'allowance', fixed: 'right', minWidth:'160',  slots: { default: ({row}) => {
-        return [
-          h('div',{
-            className:"k-table-content-operation"
-          },[
-            h(resolveComponent('KTableEditBtn'), {
-              toolTipText: '修改', onClick: () => {
-                formEvent.onModify("角色修改",row,'modify')
-              }
-            }),
-            h(resolveComponent('KTableAutoBtn'), {
-              toolTipText:"角色配置",
-              iconType:"icon-quanxian",
-              iconColor:"#B291DA",
-              onClick: () => {
-                authorityData.data = row
-                authorityData.showModal=true
-              }
-            }),
-            h(resolveComponent('KTableDeleteBtn'), {
-              onConfirm: () => {
-                tableViewVo.onApi(RoleApi.DeleteRole,row)
-              }
-            }),
-          ])
-        ]
-      } } }
+  { title: '操作', field: 'allowance', fixed: 'right', minWidth:'160',  slots: { default:'operation'} }
 ]
 
 
@@ -69,7 +42,7 @@ let authorityData:any = reactive<Object>({
 tableViewVo.getDataFun = async (param:any)=>{
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = RoleApi.GetAllRole
-  return await ApiBase(RoleApi.GetAllRole({...param}),{showLoading:true})
+  return await RoleApi.GetAllRole({...param}).base()
 
 }
 onMounted(() => {
@@ -96,10 +69,10 @@ const onDelete = async ()=>{
     <div class="k-table-content-form">
       <k-table-form :tableViewVo="tableViewVo">
         <a-form layout="inline" :model="tableViewVo.form">
-          <a-form-item label="角色名">
+          <a-form-item label="">
             <a-input v-model:value="tableViewVo.form.name" placeholder="角色名"></a-input>
           </a-form-item>
-          <a-form-item label="角色编号">
+          <a-form-item label="">
             <a-input v-model:value="tableViewVo.form.id" placeholder="角色编号"></a-input>
           </a-form-item>
         </a-form>
@@ -115,6 +88,14 @@ const onDelete = async ()=>{
             </a-popconfirm>
           </a-button>
         </div>
+      </template>
+      <template #operation="{row}">
+        <KTableEditBtn type="primary" @click="formEvent.onModify('角色修改',row,'modify')">编辑</KTableEditBtn>
+        <KTableAutoBtn toolTipText="角色配置" iconType="icon-quanxian" iconColor="#B291DA" @click="() => {
+          authorityData.data = row
+          authorityData.showModal=true
+          }"/>
+        <KTableDeleteBtn @confirm="tableViewVo.onApi(RoleApi.DeleteRole,row)"/>
       </template>
     </k-table>
     <role  v-if="formEvent.show" :formEvent="formEvent" @finish="tableViewVo.reFresh()"/>

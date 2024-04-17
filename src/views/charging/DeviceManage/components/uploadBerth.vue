@@ -53,8 +53,8 @@
 import { file2Xce } from '@/utils/xlsxUtil';
 import rules from "@/common/rules";
 import {reactive} from "vue";
-import {message, notification} from "ant-design-vue";
-import {ApiBase, BerthApi, errorCheck} from "@/common/api";
+import {message} from "ant-design-vue";
+import {BerthApi, errorCheck} from "@/common/api";
 import {InboxOutlined} from "@ant-design/icons-vue";
 import * as XLSX from "xlsx";
 
@@ -163,8 +163,8 @@ const beforeUpload = (file:any, fileList:Array<any>)=>{
 const onConfirm = async()=>{
   if (state.tableDataUpload.length > 0) {
     state.confirmLoading = true;
-    const {result,error} = await ApiBase(BerthApi.AddBerthBatches(state.tableDataUpload))
-    if (errorCheck(result,error)){
+    const result = await BerthApi.AddBerthBatches(state.tableDataUpload).base()
+    if (errorCheck(result)){
       message.success('添加成功！')
       emit('finish')
       emit('cancel')

@@ -3,106 +3,41 @@ import {h, reactive, onMounted, resolveComponent} from "vue"
 import {TableViewVo} from "@/common/tableViewVo"
 import {VxeGridProps} from "vxe-table"
 import {FormEvent} from './components/form'
-import {ApiBase, AdminApi, errorCheck, Merchant} from "@/common/api";
+import {AdminApi, errorCheck} from "@/common/api";
 import {message} from "ant-design-vue";
 import Admin from './components/Admin.vue'
-import Format from "@/common/format";
+import {getLabel} from "@/common/format";
 import SetRole from './components/MoreCheck.vue'
 import md5 from "js-md5";
 
 
-let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),))
+let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),{useTenant:true}))
 let formEvent: FormEvent = reactive<FormEvent>(new FormEvent());
 // 重写此属性定义表格显示列
 tableViewVo.vxeGridProps.columns = [
-
   {type: 'checkbox', width: '60'},
   {field: "id", title: "编号", minWidth: '180', showHeaderOverflow: true},
   {field: "name", title: "姓名", minWidth: '120', showHeaderOverflow: true},
   {field: "username", title: "用户名", minWidth: '120', showHeaderOverflow: true},
   {
-    field: "status", title: "状态", minWidth: '120', slots: {
-      default: ({row}) => {
-        return [
-          h(resolveComponent('a-tag'),
-              {color: row.state == 1 ? 'green' : 'red'},
-              () => row.state === 1 ? '已启用' : '已禁用')
-        ];
-      }
-    },
+    field: "state", title: "状态", minWidth: '120', slots: {default: 'state'},
     formatter:({cellValue})=>cellValue === 1 ? '已启用' : '已禁用'
   },
   {
-    field: "sex", title: "性别", minWidth: '80', showOverflow: true, slots: {
-      default: ({row}) => {
-        return [Format.sexType[row.sex].label]
-      }
-    },
-    formatter:({cellValue})=>Format.sexType[cellValue].label
+    field: "sex", title: "性别", minWidth: '80', showOverflow: true,
+    formatter:({cellValue})=>getLabel('sexType',cellValue)
   },
-  {field: "phone", title: "联系电话", minWidth: '120', showOverflow: true},
+  {field: "phone", title: "手机号", minWidth: '120', showOverflow: true},
   {field: "addr", title: "地址", minWidth: '280', showOverflow: true},
   {
     field: "roleList", title: "角色", minWidth: '240', showOverflow: true,
-    // slots: {
-    //   default: ({row}) => row.roleList.map((item: any) => (item.name + ' '))
-    // },
     formatter:({row})=>row.roleList.map((item: any) => (item.name + ' '))
   },
   {field: "email", title: "邮箱", minWidth: '240', showOverflow: true},
 
   {
     title: '操作', field: 'allowance', fixed: 'right', minWidth: '180', slots: {
-      default: ({row}) => {
-        return [
-          h('div', {
-            className: "k-table-content-operation"
-          }, [
-            h(resolveComponent('KTableEditBtn'), {
-              toolTipText: '修改', onClick: () => {
-                formEvent.onModify("修改管理员",row,'modify')
-              }
-            }),
-            h(resolveComponent('KTableAutoBtn'), {
-              toolTipText:"角色配置",
-              iconType:"icon-jiaoseguanli",
-              iconColor:"#B291DA",
-              onClick: () => {
-                formEvent.type="Admin"
-                formEvent.show = true;
-                formEvent.title = "角色分配（该操作完成后会自动退出登录）"
-                formEvent.formData = row
-              }
-            }),
-            h(resolveComponent('KTableAutoBtn'), {
-              toolTipText:"修改密码",
-              iconType:"icon-suodakaimima-copy",
-              iconColor:"#28A745",
-              onClick: () => {
-                passwordOption.showModel = true
-                passwordOption.adminId = row.id
-              }
-            }),
-            h(resolveComponent('KTableStatusBtn'), {
-              onClick: async () => {
-                row.state = row.state == 1 ? 2 : 1
-                let res = await tableViewVo.onApi(AdminApi.EditAdminState,{
-                  ids: [row.id],
-                  state: row.state
-                })
-                if (res!=='') {
-                  message.success('修改成功')
-                } else row.state = row.state == 1 ? 2 : 1
-              }
-            }),
-            h(resolveComponent('KTableDeleteBtn'), {
-              onConfirm: () => {
-                tableViewVo.onApi(AdminApi.DeleteAdmin,row)
-              }
-            }),
-          ])
-        ]
-      }
+      default: 'operation'
     }
   }
 ]
@@ -116,9 +51,8 @@ let passwordOption = reactive({
 })
 // 数据获取
 tableViewVo.getDataFun = async (param: any) => {
-  param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = AdminApi.GetAllAdmin
-  return await ApiBase(AdminApi.GetAllAdmin({...param}))
+  return await AdminApi.GetAllAdmin({...param}).base()
 }
 
 onMounted(() => {
@@ -129,7 +63,7 @@ const filterOption = (input: string, option: any) => {
   return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
 //禁用 / 启用
-const EditStatus = async (status:number) => {
+const EditStatusBatch = async (status:number) => {
   if (tableViewVo.checkList.length<1) return false
   let res = await tableViewVo.onApi(AdminApi.EditAdminState,{
     ids: tableViewVo.checkList.map((item:any)=>item.id),
@@ -152,6 +86,19 @@ const onDelete = async ()=>{
     message.success('删除成功')
   }
 }
+const EditStatus = async (row:any,isCheck:boolean)=>{
+  await tableViewVo.onApi(AdminApi.EditAdminState,{
+    ids: [row.id],
+    state: isCheck?1:2
+  })
+}
+
+function setRoleConfig(row:any){
+  formEvent.type='Admin'
+  formEvent.show = true;
+  formEvent.title = "角色分配（该操作完成后会自动退出登录）"
+  formEvent.formData = row
+}
 
 //修改密码
 const EditPassword = async ()=>{
@@ -164,11 +111,11 @@ const EditPassword = async ()=>{
     return false
   }
   passwordOption.loading = true
-  const {result,error} = await ApiBase(AdminApi.EditAdminPassword({
+  const result = await AdminApi.EditAdminPassword({
     adminId:passwordOption.adminId,
     password:md5(md5(passwordOption.password))
-  }))
-  if (errorCheck(result,error)){
+  }).base()
+  if (errorCheck(result)){
     passwordOption.showModel = false;
     message.success('密码修改成功')
     tableViewVo.reFresh()
@@ -183,14 +130,14 @@ const EditPassword = async ()=>{
     <div class="k-table-content-form">
       <k-table-form :tableViewVo="tableViewVo">
         <a-form layout="inline" :model="tableViewVo.form">
-          <a-form-item label="管理员姓名">
-            <a-input v-model:value="tableViewVo.form.name" placeholder="管理员姓名"></a-input>
+          <a-form-item label="">
+            <a-input v-model:value="tableViewVo.form.name" placeholder="管理员姓名" allowClear></a-input>
           </a-form-item>
-          <a-form-item label="管理员用户名">
-            <a-input v-model:value="tableViewVo.form.username" placeholder="管理员用户名"></a-input>
+          <a-form-item label="">
+            <a-input v-model:value="tableViewVo.form.username" placeholder="管理员用户名" allowClear></a-input>
           </a-form-item>
-          <a-form-item label="管理员编号">
-            <a-input v-model:value="tableViewVo.form.id" placeholder="管理员编号"></a-input>
+          <a-form-item label="">
+            <a-input v-model:value="tableViewVo.form.phone" placeholder="手机号" allowClear></a-input>
           </a-form-item>
         </a-form>
       </k-table-form>
@@ -199,14 +146,25 @@ const EditPassword = async ()=>{
       <template #toolbar_buttons>
         <div class="toolbar-buttons">
           <a-button type="primary" @click="formEvent.onModify('新增管理员',{tenantId:tableViewVo.tenantCode},'add')">新增管理员</a-button>
-          <a-button type="primary" @click="EditStatus(2)">禁用</a-button>
-          <a-button type="primary" @click="EditStatus(1)">启用</a-button>
+          <a-button type="primary" @click="EditStatusBatch(2)">禁用</a-button>
+          <a-button type="primary" @click="EditStatusBatch(1)">启用</a-button>
           <a-button type="primary" danger>
             <a-popconfirm title="确认删除吗？" @confirm="onDelete">
               删除
             </a-popconfirm>
           </a-button>
         </div>
+      </template>
+      <template #state="{row}">
+        <KSwitchState :value="row['state']==1" @change="(checked)=>EditStatus(row,checked)"></KSwitchState>
+      </template>
+      <template #operation="{row}">
+        <KTableEditBtn @click="formEvent.onModify('修改管理员',row,'modify')"/>
+        <KTableAutoBtn toolTipText="角色配置" iconType="icon-jiaoseguanli" iconColor="#B291DA" @click="setRoleConfig(row)"/>
+        <KTableAutoBtn toolTipText="修改密码" iconType="icon-setPass" iconColor="#28A745" @click="()=>{
+          passwordOption.showModel = true
+          passwordOption.adminId = row['id']
+        }"/>
       </template>
     </k-table>
     <SetRole v-if="formEvent.show && formEvent.type==='Admin'" :formEvent="formEvent" @cancel="()=>formEvent.show = false"

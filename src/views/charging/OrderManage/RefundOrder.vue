@@ -2,9 +2,9 @@
 import {h, ref, reactive, onMounted, resolveComponent} from "vue"
 import {TableViewVo} from "@/common/tableViewVo"
 import {VxeGridProps} from "vxe-table"
-import {ApiBase, errorCheck, OrderApi} from "@/common/api";
+import {OrderApi} from "@/common/api";
 
-import format from "@/common/format";
+import format, {getLabel} from "@/common/format";
 
 let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),))
 
@@ -42,7 +42,7 @@ tableViewVo.vxeGridProps.columns = [
     //     return [(format.payChannel.find(item=>item.key===row.channel) as formatType).label]
     //   }
     // },
-    formatter:({cellValue})=>(format.payChannel.find(item=>item.key===cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('payChannel',cellValue)
   },
   {field: "type", title: "支付类型", minWidth: "240", showHeaderOverflow: true,
     // slots:{
@@ -50,17 +50,11 @@ tableViewVo.vxeGridProps.columns = [
     //     return [(format.payTypeOptions.find(item=>item.key===row.type) as formatType).label]
     //   }
     // },
-    formatter:({cellValue})=>(format.payTypeOptions.find(item=>item.key===cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('payTypeOptions',cellValue)
 
   },
   {field: "amendSource", title: "退款来源", minWidth: "140", showHeaderOverflow: true,
-    // slots:{
-    //   default: ({row}) => {
-    //     return [(format.amendSource.find(item=>item.key==row.amendSource) as formatType).label]
-    //   }
-    // },
-    formatter:({cellValue})=>(format.amendSource.find(item=>item.key===cellValue) as formatType)?.label
-
+    formatter:({cellValue})=>getLabel('amendSource',cellValue)
   },
   {field: "amendId", title: "退款来源编号", minWidth: "240", showHeaderOverflow: true},
   {field: "initTimeBegin", title: "退款发起时间", minWidth: "240", showHeaderOverflow: true},
@@ -72,7 +66,7 @@ tableViewVo.vxeGridProps.columns = [
 tableViewVo.getDataFun = async (param) => {
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = OrderApi.getRefundRecord
-  return await ApiBase(OrderApi.getRefundRecord({...param}))
+  return await OrderApi.getRefundRecord({...param}).base()
 }
 
 const timeData = reactive([])

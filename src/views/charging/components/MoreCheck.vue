@@ -1,7 +1,7 @@
 <style lang="less">
 .setRoleModel {
   height: 40vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   .ant-checkbox-group-item,
   .ant-radio-wrapper{
     padding-bottom: 8px;

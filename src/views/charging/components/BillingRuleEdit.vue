@@ -46,7 +46,7 @@
   }
   &-drawer {
     height: 100%!important;
-    overflow-y: scroll;
+    overflow-y: auto;
     &-num {
       width: 100%;
       display: flex;
@@ -59,7 +59,7 @@
 }
 .BillForm {
   height: calc(100vh - 130px);
-  overflow-y: scroll;
+  overflow-y: auto;
   box-sizing: border-box;
 
 }

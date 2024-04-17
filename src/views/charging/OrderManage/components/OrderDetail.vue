@@ -26,7 +26,7 @@
               </p>
               <p>
                 <span>现状态: </span>
-                <span>{{ format.getStateAfter(item.stateAfter) }}</span>
+                <span>{{ getLabel('stateAfter',item['stateAfter']) }}</span>
               </p>
               <kw-plate
                   class="detail-plate"
@@ -64,7 +64,7 @@
                   :rowKey="(val:any)=>val.id"
               >
                 <template slot="source" v-slot:default="source">
-                  <span>{{ format.TimeOption(source) }}</span>
+                  <span>{{ getLabel('confirmTypeOptions',source) }}</span>
                 </template>
               </a-table>
             </div>
@@ -113,8 +113,8 @@ import {TableViewVo} from "@/common/tableViewVo"
 import KwPlate from '../../../../components/KwPlate.vue';
 import {onMounted, reactive} from "vue";
 import {VxeGridProps} from "vxe-table";
-import format from "@/common/format";
-import {ApiBase, errorCheck,OrderApi} from "@/common/api";
+import format, {getLabel} from "@/common/format";
+import {errorCheck,OrderApi} from "@/common/api";
 
 const props = defineProps({
   orderDetails:{
@@ -247,8 +247,8 @@ const state = reactive({
 })
 const getOrderDetails = async ()=>{
   state.confirmLoading = true
-  const {result,error} = await ApiBase(OrderApi.GetOrderDetail({id:orderDetails.orderId}))
-  if (errorCheck(result,error)){
+  const result = await OrderApi.GetOrderDetail({id:orderDetails.orderId}).base()
+  if (errorCheck(result)){
     console.log('getOrderDetails',result)
     state.orderList = result.data?.orderChangeList
     state.detailPlate = result.data?.plate

@@ -1,7 +1,7 @@
 <style scoped lang="less">
 .ChargingPileModel {
   max-height: 40vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 /deep/ .ant-input-number {
   width: 100%;
@@ -87,7 +87,7 @@
             v-model:value="form.rechargeMode"
             placeholder="请选择充电桩充电方式"
         >
-          <a-select-option v-for="(item,index) in format.RechargeType" :key="index" :value="item.key">{{item.label}}</a-select-option>
+          <a-select-option v-for="(item,index) in RechargeType" :key="index" :value="item.key">{{item.label}}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="充电站">
@@ -134,6 +134,7 @@ import {ChargingApi} from "@/common/api";
 import {message} from "ant-design-vue";
 import {BrandList} from "@/common/BrandConfig"
 import format from "@/common/format";
+import {RechargeType} from "@/common/fieldConfig";
 
 const emit = defineEmits(["finish"]);
 

@@ -3,8 +3,9 @@ import {h, ref, reactive, onMounted, resolveComponent} from "vue"
 import {TableViewVo} from "@/common/tableViewVo"
 import {VxeGridProps} from "vxe-table"
 import {FormEvent} from '../components/form'
-import {ApiBase, errorCheck, OrderApi} from "@/common/api";
-import format from "@/common/format";
+import {OrderApi} from "@/common/api";
+import format, {getLabel} from "@/common/format";
+import {refundType} from "@/common/fieldConfig";
 
 let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),))
 let formEvent: FormEvent = reactive<FormEvent>(new FormEvent());
@@ -35,14 +36,13 @@ tableViewVo.vxeGridProps.columns = [
           h(resolveComponent('a-tag'),
               {color: row.state == 1 ? 'yellow' : row.state == 2 ? 'green' : 'red'},
               () => {
-                let res = format.billPayType.find(item => item.key === row.state) as formatType
-                return res.label
+                  return getLabel('billPayType',row.state)
               }
           )
         ];
       }
     },
-    formatter:({cellValue})=>(format.billPayType.find(item => item.key === cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('billPayType',cellValue)
   },
   {
     field: "refundState", title: "退款状态", minWidth: "240", showHeaderOverflow: true,
@@ -52,14 +52,13 @@ tableViewVo.vxeGridProps.columns = [
           h(resolveComponent('a-tag'),
               {color: row.refundState == 2 ? 'yellow' : row.refundState == 3 ? 'green' : 'red'},
               () => {
-                let res = format.refundType.find(item => item.key === row.refundState) as formatType
-                return res.label
+                return getLabel('refundType',row.refundState)
               }
           )
         ];
       }
     },
-    formatter:({cellValue})=>(format.refundType.find(item => item.key === cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('refundType',cellValue)
 
   },
   {
@@ -70,7 +69,7 @@ tableViewVo.vxeGridProps.columns = [
     //     return [res.label]
     //   }
     // },
-    formatter:({cellValue})=>(format.payTypeOptions.find(item => item.key === cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('payTypeOptions',cellValue)
 
   },
   {field: "paySource", title: "支付来源", minWidth: "160", showHeaderOverflow: true,
@@ -83,7 +82,7 @@ tableViewVo.vxeGridProps.columns = [
     //     return [res.label]
     //   }
     // },
-    formatter:({cellValue})=>(format.payChannel.find(item => item.key === cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('payChannel',cellValue)
 
   },
   {field: "userId", title: "用户Id", minWidth: "240", showHeaderOverflow: true},
@@ -98,7 +97,7 @@ tableViewVo.vxeGridProps.columns = [
 tableViewVo.getDataFun = async (param) => {
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = OrderApi.GetAllBill
-  return await ApiBase(OrderApi.GetAllBill({...param}))
+  return await OrderApi.GetAllBill({...param}).base()
 
 }
 

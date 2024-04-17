@@ -4,7 +4,11 @@
 const props = defineProps({
   toolTipPlacement: String,
   toolTipText: String,
-  mouseEnterDelay: Number
+  mouseEnterDelay: Number,
+  useTool: {
+    type: Boolean,
+    default: true
+  }
 })
 
 const emit = defineEmits(['click'])
@@ -16,7 +20,7 @@ const onClick = () => {
 
 <template>
   <a-tooltip :placement="props?.toolTipPlacement ?? 'top'" :mouseEnterDelay="props?.mouseEnterDelay ?? 0.8">
-    <template #title>
+    <template #title v-if="useTool">
       <span>{{ props?.toolTipText ?? '' }}</span>
     </template>
     <div style="padding: 0 8px;display: inline-block;cursor: pointer;" @click="onClick">

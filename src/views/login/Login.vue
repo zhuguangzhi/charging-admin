@@ -2,12 +2,11 @@
 import {useRouter} from 'vue-router'
 import {account} from '@/store'
 import {loadMenu, loadRoutes} from '@/utils/routerUtil'
-import {ApiBase, errorCheck, Login} from '@/common/api'
+import {errorCheck, Login} from '@/common/api'
 import LoginItem from "@/views/login/components/LoginItem.vue";
 import {onMounted, reactive, ref} from "vue";
 import {read, remove, write} from "../../common/commonFun/local"
 import md5 from 'js-md5'
-import { message } from 'ant-design-vue'
 import { UserOutlined,IdcardOutlined,LockOutlined} from '@ant-design/icons-vue'
 
 const accountStore = account()
@@ -69,18 +68,15 @@ const home = async (tenantCode:string|number) => {
 
 }
 
-const example2 = () => {
-  router.push('/example2')
-}
 
 const login = async () => {
   loading.value = true
-  const {result,error} = await ApiBase(Login({
+  const result = await Login({
     username: user.username,
     password: md5(md5(user.password)),
     tenantCode: user.tenantCode
-  }), {showLoading: true})
-  if (errorCheck(result,error)) {
+  }).base()
+  if (errorCheck(result)) {
     console.log('login',result)
     if (checked.value) {
       //  记住密码

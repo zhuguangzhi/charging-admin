@@ -42,7 +42,7 @@
 import {onMounted, reactive, ref} from "vue";
 import {FormEvent} from './form'
 import RulesList from "@/common/rules";
-import {ApiBase, errorCheck, Merchant} from "@/common/api";
+import {Merchant} from "@/common/api";
 import {message,notification} from "ant-design-vue";
 
 const emit = defineEmits(["finish"]);

@@ -1,5 +1,13 @@
-@primary-color: #F7F9F9;
-
+:root {
+  // header高度
+  --ant-home-content-header-height: 48px;
+  // 主要按钮文字颜色
+  --ant-bt-primary-text-color: #fff;
+   --ant-color-primary: rgb(51, 102, 204);
+  --ant-color-primary-70:rgba(51, 102, 204,0.7);
+  --ant-color-primary-10:rgba(51, 102, 204,0.1);
+  --ant-color-primary-30:rgba(51, 102, 204,0.3);
+}
 // 全局样式
 .toolbar-buttons{
   display: flex;
@@ -23,6 +31,7 @@
   background-color: #FFFFFF;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   .ant-spin-container .vxe-grid .vxe-grid--toolbar-wrapper .vxe-toolbar {
     background-color: #fff!important;
   }
@@ -71,7 +80,3 @@
   align-items: center;
 }
 
-.ant-modal-body .ant-select {
-  width: 100%;
-  color: #999999;
-}

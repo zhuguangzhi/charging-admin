@@ -21,7 +21,8 @@ const onClick = () => {
 </script>
 
 <template>
-  <k-table-opt-btn :toolTipText="props?.toolTipText" @click="onClick">
-    <icon-font :type="props.iconType" :style="{color: props.iconColor}"></icon-font>
+  <k-table-opt-btn :toolTipText="props?.toolTipText" @click="onClick" :use-tool="false">
+    <span :style="{color: props.iconColor}">{{props?.toolTipText}}</span>
+<!--    <icon-font :type="props.iconType" :style="{color: props.iconColor,fontSize:'18px'}"></icon-font>-->
   </k-table-opt-btn>
 </template>

@@ -3,9 +3,9 @@ import {h, ref, reactive, onMounted, resolveComponent} from "vue"
 import {TableViewVo} from "@/common/tableViewVo"
 import {VxeGridProps} from "vxe-table"
 import {FormEvent} from '../components/form'
-import {ApiBase, errorCheck, Merchant, OrderApi} from "@/common/api";
+import {errorCheck, OrderApi} from "@/common/api";
 import {message} from "ant-design-vue";
-import format from "@/common/format";
+import format, {getLabel} from "@/common/format";
 
 let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),))
 let formEvent: FormEvent = reactive<FormEvent>(new FormEvent());
@@ -52,14 +52,13 @@ tableViewVo.vxeGridProps.columns = [
           h(resolveComponent('a-tag'),
               {color: row.state == 1 ? 'yellow' : row.state == 2 ? 'green' : 'red'},
               () => {
-                let res = format.billPayType.find(item => item.key === row.state) as formatType
-                return res.label
+                  return getLabel('billPayType',row.state)
               }
           )
         ];
       }
     },
-    formatter:({cellValue})=>(format.billPayType.find(item => item.key === cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('billPayType',cellValue)
 
   },
   {
@@ -70,14 +69,13 @@ tableViewVo.vxeGridProps.columns = [
           h(resolveComponent('a-tag'),
               {color: row.refundState == 2 ? 'yellow' : row.refundState == 3 ? 'green' : 'red'},
               () => {
-                let res = format.refundType.find(item => item.key === row.refundState) as formatType
-                return res.label
+                return getLabel('refundType',row.refundState)
               }
           )
         ];
       }
     },
-    formatter:({cellValue})=>(format.refundType.find(item => item.key === cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('refundType',cellValue)
 
   },
   {
@@ -88,7 +86,7 @@ tableViewVo.vxeGridProps.columns = [
     //     return [res.label]
     //   }
     // },
-    formatter:({cellValue})=>(format.payTypeOptions.find(item => item.key === cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('payTypeOptions',cellValue)
 
   },
   {field: "paySource", title: "支付来源", minWidth: "160", showHeaderOverflow: true},
@@ -100,7 +98,7 @@ tableViewVo.vxeGridProps.columns = [
     //     return [res.label]
     //   }
     // },
-    formatter:({cellValue})=>(format.payChannel.find(item => item.key === cellValue) as formatType).label
+    formatter:({cellValue})=>getLabel('payChannel',cellValue)
 
   },
   {field: "userId", title: "用户Id", minWidth: "240", showHeaderOverflow: true},
@@ -149,7 +147,7 @@ tableViewVo.vxeGridProps.columns = [
 tableViewVo.getDataFun = async (param) => {
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = OrderApi.GetAllBill
-  return await ApiBase(OrderApi.GetAllBill({...param}))
+  return await OrderApi.GetAllBill({...param}).base()
 
 }
 //退款
@@ -159,13 +157,13 @@ const onRefund = async () => {
     message.error('请输入退款金额')
     return false
   }
-  const {result, error} = await ApiBase(OrderApi.RefundBill({
+  const result = await OrderApi.RefundBill({
         id: refund.refundId,
         refundSum: Number(refund.refundMoney)*100,
         refundTime: format.getNowFormatDate()
       }
-  ))
-  if (errorCheck(result, error)) {
+  ).base()
+  if (errorCheck(result)) {
     message.success('退款成功')
     refund.refundMoney = ''
     tableViewVo.reset()

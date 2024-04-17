@@ -1,7 +1,5 @@
 <script setup lang="ts">
-
-import { message } from 'ant-design-vue'
-import { QuestionCircleOutlined } from '@ant-design/icons-vue'
+import KPopupInstance from "@/components/k_popup/KPopupVo";
 
 let props = defineProps({
   title: {
@@ -14,7 +12,7 @@ let props = defineProps({
   },
   size: {
     type: String,
-    default: 'small'
+    default: 'middle'
   },
   type: {
     type: String,
@@ -37,22 +35,22 @@ const confirm = () => {
 }
 
 const cancel = () => {
-  message.warning('取消' + props.text ?? '')
+  // message.warning('取消' + props.text ?? '')
+  KPopupInstance.open.value = false
   emit('cancel')
 }
-
+function openPopup() {
+  KPopupInstance.openCall({
+    title: '批量删除',
+    msg: props.title,
+    onOk: confirm,
+    onClose: cancel,
+  })
+}
 </script>
 
 <template>
-  <a-popconfirm
-    class="k-delete-btn"
-    :disabled="props.disabled"
-    :title="props.title"
-    @confirm="confirm"
-    @cancel="cancel">
-    <template #icon><question-circle-outlined style="color: red" /></template>
-    <a-button :disabled="props.disabled" :type="props.type" :size="props.size" :danger="props.danger">
-      {{ text }}
-    </a-button>
-  </a-popconfirm> 
+  <a-button :disabled="props.disabled" :type="props.type" :size="props.size" :danger="props.danger" @click="openPopup">
+    {{ text }}
+  </a-button>
 </template>

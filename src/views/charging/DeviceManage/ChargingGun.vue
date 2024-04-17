@@ -4,11 +4,11 @@ import { TableViewVo } from "@/common/tableViewVo"
 import { VxeGridProps } from "vxe-table"
 import ChargingGun from  './components/ChargingGunModel.vue'
 import {FormEvent} from '../components/form'
-import {ApiBase, errorCheck, ChargingApi, BerthApi} from "@/common/api";
+import {ChargingApi} from "@/common/api";
 import {message} from "ant-design-vue";
 import {BrandList} from '@/common/BrandConfig';
 import ChargingDetails from './components/ChargingDetails.vue'
-import format from "@/common/format";
+import format, {getLabel} from "@/common/format";
 // import BindBerth from '../components/MoreCheck.vue'
 
 let tableViewVo: TableViewVo = reactive<TableViewVo>(new TableViewVo(reactive<VxeGridProps>({}),))
@@ -37,11 +37,12 @@ tableViewVo.vxeGridProps.columns = [
         return [
           h(resolveComponent('a-tag'),
               {color: row.status==1?'green':'red' },
-              ()=>format.gunUseStatus(row.status)?.label)
+              ()=>getLabel('gunStatus',row.status)
+          )
         ];
       }
     },
-    formatter:({cellValue})=>(format.gunUseStatus(cellValue) as formatType)?.label
+    formatter:({cellValue})=>getLabel('gunStatus',cellValue)
   },
   { field: "type", title: "设备类型",minWidth:"120", showOverflow: true ,
     // slots:{
@@ -128,7 +129,7 @@ let detailList:any = reactive<object>({
 tableViewVo.getDataFun = async (param:any)=>{
   param.tenantId = tableViewVo.tenantCode
   tableViewVo.getMethods = ChargingApi.GetAllDevice
-  return await ApiBase(ChargingApi.GetAllDevice({...param,type:"13,15"}),{showLoading:true})
+  return await ChargingApi.GetAllDevice({...param,type:"13,15"}).base()
 
 }
 

@@ -73,8 +73,8 @@
 import {reactive, ref} from "vue";
 import {FormEvent} from './form'
 import RulesList from "@/common/rules";
-import {ApiBase, errorCheck, AdminApi,RoleApi} from "@/common/api";
-import {message, notification} from "ant-design-vue";
+import {AdminApi} from "@/common/api";
+import {message} from "ant-design-vue";
 import md5 from "js-md5";
 
 const emit = defineEmits(["finish"]);
