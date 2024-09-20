@@ -136,16 +136,16 @@ const routerMap = {
     name: 'WeChatApi',
     component: () => import('@/views/charging/WeChatApi.vue')
   },
-  example: {
-    path: '/example',
-    name: 'example',
-    component: () => import('@/views/example/example.vue')
-  },
-  example2: {
-    path: '/example2',
-    name: 'example2',
-    component: () => import('@/views/example/example2.vue')
-  },
+  // example: {
+  //   path: '/example',
+  //   name: 'example',
+  //   component: () => import('@/views/example/example.vue')
+  // },
+  // example2: {
+  //   path: '/example2',
+  //   name: 'example2',
+  //   component: () => import('@/views/example/example2.vue')
+  // },
   exp404: {
     authority: '*',
     name: 'exp404',
